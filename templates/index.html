@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Titanic Survival Predictor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+
+  <!-- ── Ocean particles background ── -->
+  <div class="ocean-bg" id="oceanBg"></div>
+
+  <!-- ── Header ── -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="ship-icon">🚢</div>
+      <h1>Titanic Survival Predictor</h1>
+      <p class="subtitle">Would you have survived the night of April 14–15, 1912?</p>
+    </div>
+  </header>
+
+  <!-- ── Main content ── -->
+  <main class="container">
+    <div class="card form-card">
+      <h2>Enter Passenger Details</h2>
+
+      <form id="predForm" novalidate>
+
+        <!-- Row 1: Class & Sex -->
+        <div class="form-row">
+          <div class="field-group">
+            <label for="pclass">Passenger Class</label>
+            <div class="radio-group">
+              <label class="radio-btn">
+                <input type="radio" name="pclass" value="1" required /> 1st Class
+              </label>
+              <label class="radio-btn">
+                <input type="radio" name="pclass" value="2" /> 2nd Class
+              </label>
+              <label class="radio-btn">
+                <input type="radio" name="pclass" value="3" checked /> 3rd Class
+              </label>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="sex">Gender</label>
+            <div class="radio-group">
+              <label class="radio-btn">
+                <input type="radio" name="sex" value="male" checked /> Male
+              </label>
+              <label class="radio-btn">
+                <input type="radio" name="sex" value="female" /> Female
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2: Age & Fare -->
+        <div class="form-row">
+          <div class="field-group">
+            <label for="age">Age (years)</label>
+            <input type="number" id="age" name="age" min="0.1" max="100" step="0.5"
+                   placeholder="e.g. 28" value="28" required />
+          </div>
+          <div class="field-group">
+            <label for="fare">Ticket Fare (£)</label>
+            <input type="number" id="fare" name="fare" min="0" max="600" step="0.5"
+                   placeholder="e.g. 32.20" value="32.20" required />
+          </div>
+        </div>
+
+        <!-- Row 3: SibSp & Parch -->
+        <div class="form-row">
+          <div class="field-group">
+            <label for="sibsp">Siblings / Spouse aboard</label>
+            <input type="number" id="sibsp" name="sibsp" min="0" max="10" value="0" required />
+          </div>
+          <div class="field-group">
+            <label for="parch">Parents / Children aboard</label>
+            <input type="number" id="parch" name="parch" min="0" max="10" value="0" required />
+          </div>
+        </div>
+
+        <!-- Row 4: Embarked -->
+        <div class="form-row">
+          <div class="field-group full-width">
+            <label>Port of Embarkation</label>
+            <div class="radio-group">
+              <label class="radio-btn">
+                <input type="radio" name="embarked" value="S" checked /> Southampton (S)
+              </label>
+              <label class="radio-btn">
+                <input type="radio" name="embarked" value="C" /> Cherbourg (C)
+              </label>
+              <label class="radio-btn">
+                <input type="radio" name="embarked" value="Q" /> Queenstown (Q)
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="predict-btn" id="submitBtn">
+          <span id="btnText">🔍 Predict My Fate</span>
+          <span id="btnLoader" class="loader" style="display:none;"></span>
+        </button>
+      </form>
+    </div>
+
+    <!-- ── Result card ── -->
+    <div class="card result-card" id="resultCard" style="display:none;">
+      <div id="resultInner"></div>
+    </div>
+
+    <!-- ── Feature importance mini-chart ── -->
+    <div class="card info-card">
+      <h2>Key Survival Factors</h2>
+      <div class="factor-grid">
+        <div class="factor">
+          <div class="factor-icon">👩</div>
+          <div class="factor-label">Women &amp; Children First</div>
+          <div class="factor-bar"><div class="bar-fill" style="width:92%"></div></div>
+        </div>
+        <div class="factor">
+          <div class="factor-icon">🎩</div>
+          <div class="factor-label">1st Class Privilege</div>
+          <div class="factor-bar"><div class="bar-fill" style="width:78%"></div></div>
+        </div>
+        <div class="factor">
+          <div class="factor-icon">💰</div>
+          <div class="factor-label">Higher Fare = Better Access</div>
+          <div class="factor-bar"><div class="bar-fill" style="width:65%"></div></div>
+        </div>
+        <div class="factor">
+          <div class="factor-icon">👨‍👩‍👧</div>
+          <div class="factor-label">Family Size Matters</div>
+          <div class="factor-bar"><div class="bar-fill" style="width:50%"></div></div>
+        </div>
+        <div class="factor">
+          <div class="factor-icon">⚓</div>
+          <div class="factor-label">Port of Embarkation</div>
+          <div class="factor-bar"><div class="bar-fill" style="width:35%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Historical stats ── -->
+    <div class="card stats-card">
+      <h2>Historical Statistics</h2>
+      <div class="stats-grid">
+        <div class="stat"><div class="stat-number">2,224</div><div class="stat-label">Total Aboard</div></div>
+        <div class="stat"><div class="stat-number">710</div><div class="stat-label">Survived</div></div>
+        <div class="stat"><div class="stat-number">1,514</div><div class="stat-label">Perished</div></div>
+        <div class="stat"><div class="stat-number">31.9%</div><div class="stat-label">Survival Rate</div></div>
+        <div class="stat survived"><div class="stat-number">97%</div><div class="stat-label">1st Class Women Survived</div></div>
+        <div class="stat perished"><div class="stat-number">13%</div><div class="stat-label">3rd Class Men Survived</div></div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>Built with Flask &amp; scikit-learn · Titanic Survival Predictor · 5th Sem AI/ML Project</p>
+  </footer>
+
+  <script src="/static/js/main.js"></script>
+</body>
+</html>
